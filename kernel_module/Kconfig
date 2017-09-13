@@ -1,0 +1,6 @@
+config EXAMPLEMOD
+    tristate "500 msec timer module"
+    default n
+    help
+      This is the help string for this stupid module
+      It will print an incrementing number every 500ms

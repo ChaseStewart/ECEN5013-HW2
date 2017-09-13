@@ -1,0 +1,6 @@
+[submodule "unit_test"]
+	path = unit_test
+	url = https://github.com/ChaseStewart/ECEN5013-HW1
+[submodule "Unity"]
+	path = Unity
+	url = https://github.com/ThrowTheSwitch/Unity/
