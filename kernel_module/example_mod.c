@@ -78,4 +78,3 @@ module_exit(example_mod_exit);
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("ECEN5013 HW2 Example Kernel Module");
 MODULE_AUTHOR("Chase E Stewart");
-
