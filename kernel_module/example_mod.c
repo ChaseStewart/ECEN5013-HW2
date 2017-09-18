@@ -14,9 +14,11 @@ static struct timer_list my_timer;
 //static size_t *count_ptr;
 
 /* function to run on every timer tick */
-static void my_timer_tick(unsigned long jiffy)
+static void my_timer_tick(unsigned long data)
 {
-	printk("[example_mod][%ld] timer tick \n", jiffy );
+	int retval=0;
+	printk("[example_mod][%ld] timer tick \n", data );
+	retval = mod_timer( &my_timer, jiffies+msecs_to_jiffies(TIMER_INTERVAL) );
 	//printk("[example_mod][%ld] timer tick %ld \n", jiffy, count );
 	//*count_ptr++;
 }
