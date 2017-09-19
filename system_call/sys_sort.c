@@ -1,5 +1,7 @@
 #include <linux/kernel.h>
 #include <linux/syscalls.h>
+#include <linux/capability.h>
+#include <linux/slab.h>
 
 /* Much thanks to xorl.wordpress.com article and Bhallaji V for the link on slack */
 /* Source Article Title: Linux Kernel User to Kernel Space Range Checks */
@@ -44,9 +46,9 @@ SYSCALL_DEFINE3(sys_sort, int32_t*, buffer, uint32_t, buffer_size, int32_t*, sor
 		printk(KERN_ERR "[%s] UNABLE TO MALLOC K_BUFFER \n", SYSCALL_NAME);	
 		return ENOMEM; /* no memory to complete a malloc */
 	}
-	if (!capable(CAP_SYS_ROOT))
+	if (!capable(CAP_SYS_ADMIN))
 	{
-		printk(KERN_ERR "[%s] CAP_SYS_ROOT RETURNED ERROR \n", SYSCALL_NAME);	
+		printk(KERN_ERR "[%s] CAP_SYS_ADMIN RETURNED ERROR - USE SUDO\n", SYSCALL_NAME);	
 		return EPERM; /* insufficient permissions */
 	}
 
@@ -60,6 +62,7 @@ SYSCALL_DEFINE3(sys_sort, int32_t*, buffer, uint32_t, buffer_size, int32_t*, sor
 	
 	
 	/* now sort the buffer with bubble sort*/
+	printk(KERN_NOTICE "[%s] STARTING BUBBLE SORT\n", SYSCALL_NAME);
 	for (first_idx=buffer_size; first_idx>1; first_idx= first_idx-1 )
 	{
 		for(second_idx=0; second_idx<first_idx-1; second_idx++)
@@ -74,6 +77,7 @@ SYSCALL_DEFINE3(sys_sort, int32_t*, buffer, uint32_t, buffer_size, int32_t*, sor
 			}
 		}
 	}
+	printk(KERN_NOTICE "[%s] COMPLETED BUBBLE SORT\n", SYSCALL_NAME);
 
 	/* return result of sort to user-space and exit*/
 	retval = copy_to_user(sort_buffer, kbuffer, buffer_size);
