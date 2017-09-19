@@ -25,7 +25,6 @@ static void my_timer_tick(unsigned long data)
 	{
 		printk("[example_mod] ERROR: Failed to continue with timer\n");
 	}
-	
 }
 
 
