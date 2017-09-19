@@ -11,7 +11,7 @@
 
 
 
-SYSCALL_DEFINE3(sys_sort, int32_t *buffer, uint32_t buffer_size, int32_t *sort_buffer)
+SYSCALL_DEFINE3(sys_sort, int32_t*, buffer, uint32_t, buffer_size, int32_t*, sort_buffer)
 {
 	uint32_t first_idx  = 0; /* outer iterator */
 	uint32_t second_idx = 0; /* inner iterator */
