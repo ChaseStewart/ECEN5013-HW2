@@ -10,14 +10,14 @@
 
 /* the linux timer struct */ 
 static struct timer_list my_timer;
-extern static int32_t monotonic_counter = 0;
+static int32_t monotonic_counter;
 
 
 /* function to run on every timer tick */
 static void my_timer_tick(unsigned long data)
 {
-	int retval=0;
-	printk("[example_mod][%ld] timer tick \n", monotonic_counter );
+	int retval = 0;
+	printk("[example_mod] timer tick number: %d \n", monotonic_counter );
 	monotonic_counter++;
 
 	retval = mod_timer( &my_timer, jiffies+msecs_to_jiffies(TIMER_INTERVAL) );
@@ -31,6 +31,7 @@ static void my_timer_tick(unsigned long data)
 static int example_mod_init(void)
 {
 	int retval=0;
+	monotonic_counter = 0;
 	printk("[example_mod] Installing %dmsec timer module...\n", TIMER_INTERVAL);
 
 	/* attempt to setup the timer, point it to tick */
@@ -58,20 +59,14 @@ static int example_mod_init(void)
 static void example_mod_exit(void)
 {
 	int retval=0;
+	monotonic_counter = 0;
 
 	/* attempt to destroy timer and report results */
 	retval = del_timer(&my_timer);
-	if (retval != 0)
-	{
-		printk("[example_mod] Failed to destroy timer!\n");
-	}
-	else
-	{
-		printk("[example_mod] Timer successfully destroyed\n");
-	}
+	printk("[example_mod] Retcode for destroying timer was %d !\n", retval);
 	
 	/* inform user of exit */
-	printk("[example_mod] Example module exit\n");
+	printk("[example_mod] Exiting HW2 timer module!\n");
 
 }
 
