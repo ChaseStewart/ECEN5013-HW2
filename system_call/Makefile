@@ -1,2 +1,2 @@
-obj-y := hello.o
+obj-y := sys_sort.o
 

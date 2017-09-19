@@ -3,12 +3,15 @@
 #include <asm-generic/errno-base.h>
 
 #define SYSCALL_NAME "sys_sort"
+#define SYSCALL_NO 333
 
 /* Much thanks to xorl.wordpress.com article and Bhallaji V for the link on slack */
 /* Source Article Title: Linux Kernel User to Kernel Space Range Checks */
 #define access_ok(type,addr,size) (likely(__range_not_ok(addr, size) == 0))
 
-asmlinkage long sys_sort( int32_t *buffer, uint32_t buffer_size, int32_t *sort_buffer)
+
+
+SYSCALL_DEFINE3(sys_sort, int32_t *buffer, uint32_t buffer_size, int32_t *sort_buffer)
 {
 	uint32_t first_idx  = 0; /* outer iterator */
 	uint32_t second_idx = 0; /* inner iterator */
