@@ -1,3 +1,20 @@
+/*****************************************************
+ * Redistribution, modification or use of this software in source or binary forms 
+ * is permitted as long as the files maintain this copyright. Users are permitted to 
+ * modify this and use it to learn about the field of embedded software but don't copy 
+ * my (Chase E Stewart's) work for class, I worked really hard on this. Alex Fosdick and 
+ * the University of Colorado and Chase E Stewart are not liable for any misuse of this material. 
+ * License copyright (C) 2017 originally from Alex Fosdick, code by Chase E Stewart.
+ *****************************************************/
+/**
+ * @file mysort.c
+ * @brief A system call to sort an input buffer 
+ *
+ * @author Chase E Stewart
+ * @date Sept 19 2017
+ * @version 1.0
+ *
+ */
 #include <linux/kernel.h>
 #include <linux/syscalls.h>
 #include <linux/capability.h>
@@ -11,7 +28,16 @@
 
 #define SYSCALL_NO 333 /* just FYI */
 
-
+/*
+ * @brief define a system call to take in buffer (size = buffer_size), sort it, 
+ * and return it into sort_buffer
+ *
+ * @param int32_t *buffer- the input buffer already allocated with data
+ * @param size_t buffer_size- size of variable "buffer" above
+ * @param int32_t *sort_buffer- the output buffer already allocated which will receive the sorted array pointer
+ *
+ * @return asmlinkage long like all syscalls
+ */
 SYSCALL_DEFINE3(mysort, int32_t*, buffer, size_t, buffer_size, int32_t*, sort_buffer)
 {
 	int idx = 0;
@@ -24,10 +50,10 @@ SYSCALL_DEFINE3(mysort, int32_t*, buffer, size_t, buffer_size, int32_t*, sort_bu
 	/* check all inputs for validity */
 	printk(KERN_NOTICE "[sys_sort] INVOKING SYSCALL SYS_SORT\n");
 
-	//if (!access_ok(VERIFY_WRITE,buffer,buffer_size))
-	//{
-	//	return EACCES; /* error out if out of userspace */
-	//}
+	if (!access_ok(VERIFY_WRITE,buffer,buffer_size))
+	{
+		return EACCES; /* error out if out of userspace */
+	}
 	if (!buffer)
 	{
 		printk(KERN_ERR "[sys_sort] INVALID INPUT BUFFER \n");
