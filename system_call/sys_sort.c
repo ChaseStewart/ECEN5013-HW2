@@ -1,3 +1,24 @@
+/*****************************************************
+ * Redistribution, modification or use of this software in source or binary forms 
+ * is permitted as long as the files maintain this copyright. Users are permitted to 
+ * modify this and use it to learn about the field of embedded software but don't copy 
+ * my (Chase E Stewart's) work for class, I worked really hard on this. Alex Fosdick and 
+ * the University of Colorado and Chase E Stewart are not liable for any misuse of this material. 
+ * License copyright (C) 2017 originally from Alex Fosdick, code by Chase E Stewart.
+ *****************************************************/
+/**
+ * @file system_call.c
+ * @brief A system call that sorts an int32_t buffer
+ * 
+ * The system call is called sys_sort, it sorts an input array of chars up to the provided length,
+ * and then returns them via another input pointer
+ *
+ * @author Chase E Stewart
+ * @date Sept 19 2017
+ * @version 1.0
+ *
+ */
+
 #include <linux/kernel.h>
 #include <linux/syscalls.h>
 #include <linux/capability.h>
@@ -11,7 +32,15 @@
 
 #define SYSCALL_NO 333
 
-
+/*
+ * @brief take inputs, check them for correctness, sort them, then pass them back
+ *
+ * @param int32_t *buffer - an input buffer hopefully of size "buffer_size"
+ * @param uint32_t buffer_size - length of the buffer to sort
+ * @param int32_t *sort_buffer - a pointer to the now-sorted buffer
+ *
+ * @return none
+ */
 SYSCALL_DEFINE3(sys_sort, int32_t*, buffer, uint32_t, buffer_size, int32_t*, sort_buffer)
 {
 	int retval          = 0; /* return value   */
