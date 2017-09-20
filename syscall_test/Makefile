@@ -1,5 +1,5 @@
 all:
-	gcc syscall_test.c -o syscall_test
+	gcc -g syscall_test.c -o syscall_test
 	@echo Test Build Complete!
 
 .PHONY: clean
