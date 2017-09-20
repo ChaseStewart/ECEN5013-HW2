@@ -1,3 +1,24 @@
+/*****************************************************
+ * Redistribution, modification or use of this software in source or binary forms 
+ * is permitted as long as the files maintain this copyright. Users are permitted to 
+ * modify this and use it to learn about the field of embedded software but don't copy 
+ * my (Chase E Stewart's) work for class, I worked really hard on this. Alex Fosdick and 
+ * the University of Colorado and Chase E Stewart are not liable for any misuse of this material. 
+ * License copyright (C) 2017 originally from Alex Fosdick, code by Chase E Stewart.
+ *****************************************************/
+/**
+ * @file example_mod.c
+ * @brief A kernel module that prints to syslog every 500msec
+ * 
+ * The kernel module is called example_mod, it calls my_timer_tick() every 500msec, prints to syslog, 
+ * and increments a counter which is formatted into the syslog print.
+ *
+ * @author Chase E Stewart
+ * @date Sept 19 2017
+ * @version 1.0
+ *
+ */
+
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -13,7 +34,14 @@ static struct timer_list my_timer;
 static int32_t monotonic_counter;
 
 
-/* function to run on every timer tick */
+/*
+ * @brief increment the counter, print to syslog, and reset the timer
+ * to go off 500msec in the future
+ *
+ * @param unsigned long data - an artifact of being a callback from linux/timer
+ *
+ * @return none
+ */
 static void my_timer_tick(unsigned long data)
 {
 	int retval = 0;
@@ -27,7 +55,13 @@ static void my_timer_tick(unsigned long data)
 	}
 }
 
-
+/*
+ * @brief print to syslog, initialize timer, set it to go off in 500 msec and set counter to 0
+ *
+ * @param none
+ *
+ * @return int status
+ */
 static int example_mod_init(void)
 {
 	int retval=0;
@@ -55,7 +89,13 @@ static int example_mod_init(void)
 	return 0;
 }
 
-
+/*
+ * @brief print to syslog, stop and destroy timer, and set counter to 0
+ *
+ * @param none
+ *
+ * @return none
+ */
 static void example_mod_exit(void)
 {
 	int retval=0;
@@ -70,7 +110,7 @@ static void example_mod_exit(void)
 
 }
 
-/* set the init and exit function */
+/* set the init and exit function using a macro */
 module_init(example_mod_init);
 module_exit(example_mod_exit);
 
