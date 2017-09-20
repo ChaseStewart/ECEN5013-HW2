@@ -9,7 +9,6 @@
 #include <asm-generic/errno.h>
 #include <asm-generic/errno-base.h>
 
-#define SYSCALL_NAME "sys_sort"
 #define SYSCALL_NO 333
 
 
@@ -22,7 +21,7 @@ SYSCALL_DEFINE3(sys_sort, int32_t*, buffer, uint32_t, buffer_size, int32_t*, sor
 	uint32_t *kbuffer = NULL;
 
 	/* check all inputs for validity */
-	printk(KERN_NOTICE "[%s] INVOKING SYSCALL SYS_SORT\n", SYSCALL_NAME);
+	printk(KERN_NOTICE "[sys_sort] INVOKING SYSCALL SYS_SORT\n");
 
 	if (!access_ok(VERIFY_WRITE,buffer,buffer_size))
 	{
@@ -30,12 +29,12 @@ SYSCALL_DEFINE3(sys_sort, int32_t*, buffer, uint32_t, buffer_size, int32_t*, sor
 	}
 	else if (!buffer)
 	{
-		printk(KERN_ERR "[%s] INVALID INPUT BUFFER \n", SYSCALL_NAME);
+		printk(KERN_ERR "[sys_sort] INVALID INPUT BUFFER \n");
 		return EINVAL; /* invalid input buffer */ 
 	}
 	else if (buffer_size <= 0)
 	{
-		printk(KERN_ERR "[%s] INVALID INPUT BUFFER_SIZE \n", SYSCALL_NAME);	
+		printk(KERN_ERR "[sys_sort] INVALID INPUT BUFFER_SIZE \n");	
 		return EOVERFLOW; /* input is too low, overflow is the closest errno */
 	}
 
@@ -43,12 +42,12 @@ SYSCALL_DEFINE3(sys_sort, int32_t*, buffer, uint32_t, buffer_size, int32_t*, sor
 	kbuffer = (uint32_t *) kmalloc (sizeof(uint32_t) * buffer_size, GFP_KERNEL);
 	if (!kbuffer)
 	{
-		printk(KERN_ERR "[%s] UNABLE TO MALLOC K_BUFFER \n", SYSCALL_NAME);	
+		printk(KERN_ERR "[sys_sort] UNABLE TO MALLOC K_BUFFER \n");	
 		return ENOMEM; /* no memory to complete a malloc */
 	}
 	if (!capable(CAP_SYS_ADMIN))
 	{
-		printk(KERN_ERR "[%s] CAP_SYS_ADMIN RETURNED ERROR - USE SUDO\n", SYSCALL_NAME);	
+		printk(KERN_ERR "[sys_sort] CAP_SYS_ADMIN RETURNED ERROR - USE SUDO\n");	
 		return EPERM; /* insufficient permissions */
 	}
 
@@ -56,13 +55,13 @@ SYSCALL_DEFINE3(sys_sort, int32_t*, buffer, uint32_t, buffer_size, int32_t*, sor
 	retval = copy_from_user(kbuffer, buffer, buffer_size);
 	if (retval != 0)
 	{
-		printk(KERN_ERR "[%s] UNABLE TO COPY FROM USER BUFFER \n", SYSCALL_NAME);	
+		printk(KERN_ERR "[sys_sort] UNABLE TO COPY FROM USER BUFFER \n");	
 		return retval; /* use the retval from copy_from_user */
 	}
 	
 	
 	/* now sort the buffer with bubble sort*/
-	printk(KERN_NOTICE "[%s] STARTING BUBBLE SORT\n", SYSCALL_NAME);
+	printk(KERN_NOTICE "[sys_sort] STARTING BUBBLE SORT\n");
 	for (first_idx=buffer_size; first_idx>1; first_idx= first_idx-1 )
 	{
 		for(second_idx=0; second_idx<first_idx-1; second_idx++)
@@ -77,16 +76,16 @@ SYSCALL_DEFINE3(sys_sort, int32_t*, buffer, uint32_t, buffer_size, int32_t*, sor
 			}
 		}
 	}
-	printk(KERN_NOTICE "[%s] COMPLETED BUBBLE SORT\n", SYSCALL_NAME);
+	printk(KERN_NOTICE "[sys_sort] COMPLETED BUBBLE SORT\n");
 
 	/* return result of sort to user-space and exit*/
 	retval = copy_to_user(sort_buffer, kbuffer, buffer_size);
 	if (retval != 0)
 	{
-		printk(KERN_ERR "[%s] UNABLE TO COPY BACK TO USER BUFFER \n", SYSCALL_NAME);	
+		printk(KERN_ERR "[sys_sort] UNABLE TO COPY BACK TO USER BUFFER \n");	
 		return retval; /* use the retval from copy_to_user */
 	}
 	
-	printk(KERN_NOTICE "[%s] LEAVING SYSCALL SYS_SORT\n", SYSCALL_NAME);
+	printk(KERN_NOTICE "[sys_sort] LEAVING SYSCALL SYS_SORT\n");
 	return 0;
 }
